@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Droga Programisty">
+    <title>Szybkie palce!</title>
+</head>
+<body>
+    <h1>Gra Szybkie Palce!</h1>
+    <input type="button" value="START" onclick="RozpocznijGre()">
+    <textarea id="dziennikZdarzen" cols="100" rows="20"></textarea>
+    <script>
+        // 1. Wyswietlenie okienka Graczom
+        alert('Witaj w grze Szybkie Palce! Aby rozpocząć kliknij w przycisk "START"');
+        // 2. Wywolanie funkcji logujacej komunikat dla Graczy
+        Zanotuj('Otworzono stronę z grą Szybkie Palce!')
+
+        // 3. Zdefiniowanie zmiennych Gry
+        var punktyGracz1;
+        var punktyGracz2;
+        var czasRundy;
+        var licznikNacisniecGracz1;
+        var licznikNacisniecGracz2;
+        var limitNacisniec;
+        var liczbaRund;
+        var minimalnyCzasRundy;
+        var czyPojedynekTrwa; 
+
+        // 4. Funkcje i logika Gry
+
+        // Funkcja sluzy do rozpoczynania nowej gry
+        function RozpocznijGre() {
+            // ustawienie poczatkowych wartosci zmiennych
+            punktyGracz1 = 0;
+            punktyGracz2 = 0;
+            licznikNacisniecGracz1 = 0;
+            licznikNacisniecGracz2 = 0;
+            liczbaRund = 3;
+            limitNacisniec = liczbaRund;
+            minimalnyCzasRundy = 5;
+            czyPojedynekTrwa = false;
+            czasRundy = WylosujCzasRundy(minimalnyCzasRundy);
+            Zanotuj('Rozpoczęcie gry. Czas rundy wynosi: ' + czasRundy + ' sekund.');
+        }
+
+        // Funkcja ktora losuje czas rundy uwzgledniajac 'minimalnyCzasRundy'
+        // oraz losowy czas od 1 do 5 sekund
+        function WylosujCzasRundy(minimalnyCzasRundy) {
+            var czasLosowy = Math.floor(1 + Math.random() * 5);
+            return minimalnyCzasRundy + czasLosowy;
+        }
+
+        // Funkcja ktora loguje wiadomosc podczas dzialania gry.
+        // Wiadomosc jest wyswietlana w konsoli oraz na okienku tekstowym o nazwie 'dziennikZdarzen'.
+        function Zanotuj(wiadomosc) {
+            console.log(wiadomosc);
+            document.getElementById('dziennikZdarzen').value += wiadomosc + '\r\n'
+        }
+
+        
+
+    </script>
+
+</body>
+</html>
