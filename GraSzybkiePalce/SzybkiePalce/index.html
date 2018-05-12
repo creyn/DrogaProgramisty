@@ -9,8 +9,8 @@
 </head>
 <body>
     <h1>Gra Szybkie Palce!</h1>
-    <input type="button" value="START" onclick="RozpocznijGre()">
-    <textarea id="dziennikZdarzen" cols="100" rows="20"></textarea>
+    <input id="przyciskStart" type="button" value="START" onclick="RozpocznijGre()">
+    <textarea id="dziennikZdarzen" cols="100" rows="20" readonly></textarea>
     <script>
         // 1. Wyswietlenie okienka Graczom
         alert('Witaj w grze Szybkie Palce! Aby rozpocząć kliknij w przycisk "START"');
@@ -39,6 +39,8 @@
 
         // Funkcja sluzy do rozpoczynania nowej gry
         function RozpocznijGre() {
+            WylaczPrzyciskStart();
+            Dzwiek('start');
             Zanotuj('Rozpoczynamy Grę!');
             // ustawienie poczatkowych wartosci zmiennych
             punktyGracz1 = 0;
@@ -74,7 +76,7 @@
             czyPojedynekTrwa = false;
             czasRundy = WylosujCzasRundy(minimalnyCzasRundy);
             Zanotuj('------------------------');
-            Zanotuj('Rozpoczęcie rundy. Czas rundy wynosi: ' + czasRundy + ' sekund.');
+            Zanotuj('Rozpoczęcie rundy. Poczekaj na Pojedynek...');
 
             // poniewaz czasRundy jest w sekundach a funkcja setTimeout przyjmuje milisekundy
             window.setTimeout(Pojedynek, czasRundy * 1000); 
@@ -83,6 +85,7 @@
         // Funkcja ktora oznajmia Graczom ze wlasnie rozpoczal sie ich pojedynek
         function Pojedynek() {
             czyPojedynekTrwa = true;
+            Dzwiek('pojedynek');
             Zanotuj('Pojedynek!');
         }
 
@@ -93,7 +96,7 @@
                 licznikNacisniecGracz1++;
                 if(czyPojedynekTrwa) {
                     punktyGracz1++;
-                    Zanotuj('Klawisz nacisnął Gracz nr 1. Licznik: ' + licznikNacisniecGracz1 + '. Punkty: ' + punktyGracz1);
+                    Zanotuj('Klawisz nacisnął Gracz nr 1. Punkty: ' + punktyGracz1);
                     KoniecRundy();
                 }
 
@@ -102,7 +105,7 @@
                 licznikNacisniecGracz2++;
                 if(czyPojedynekTrwa) {
                     punktyGracz2++;
-                    Zanotuj('Klawisz nacisnął Gracz nr 2. Licznik: ' + licznikNacisniecGracz2 + '. Punkty: ' + punktyGracz2);
+                    Zanotuj('Klawisz nacisnął Gracz nr 2. Punkty: ' + punktyGracz2);
                     KoniecRundy();
                 }
             }
@@ -171,14 +174,28 @@
 
         // Funkcja wyswietlajaca komunikat o znalezionym oszuscie
         function Oszust(komunikat) {
+            Dzwiek('oszust');
             Zanotuj('------------------------');
             Zanotuj(komunikat);
         }
 
         // Funkcja wyswietlajaca komunikat o znalezionym zwyciezcy
         function Zwyciezca(komunikat) {
+            Dzwiek('zwyciezca');
             Zanotuj('------------------------');
             Zanotuj(komunikat);
+        }
+
+        // Funkcja odtwarzajaca plik z efektem dzwiekowym z katalogu 'dzwieki'
+        function Dzwiek(dzwiek) {
+            // dzwieki ze strony https://freesound.org/
+            new Audio('dzwieki/' + dzwiek + '.mp3').play();
+        }
+
+        // Funkcja wylaczajaca przycisk START
+        function WylaczPrzyciskStart() {
+            document.getElementById('przyciskStart').setAttribute('disabled', 'disabled');
+            document.getElementById('dziennikZdarzen').focus(); 
         }
 
         // Funkcja wyswietlajaca komunikat o zakonczeniu gry
