@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -6,11 +6,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Droga Programisty">
     <title>Szybkie palce!</title>
+    <style>
+        body {
+            /* sciezka do pliku z tlem */
+            background-image: url(obrazki/tlo.png) ;
+
+            /* pozycja obrazka w pionie i poziomie */
+            background-position: center center;
+
+            /* co zrobic jesli ekran komputera jest wiekszy niz obrazek */
+            background-repeat:  no-repeat;
+
+            /* co sie dzieje z obrazkiem jesli rozszerzamy okienko przegladarki */
+            background-attachment: fixed;
+
+            /* rozmiar obrazka */
+            background-size: cover;
+
+            /* kolor jaki zostanie wyswietlony pod obrazkiem czyli zanim sie pokaze w przegladarce */
+            background-color: #999;
+        }
+
+        h1, input {
+            /* polozenie tekstu wewnatrz elementu */
+            text-align: center;
+        }
+        
+        #dziennikZdarzen {
+            /* pozycja elementu wzgledem elementu nadrzednego */
+            position: absolute;
+
+            /* odleglosc elementu do dolnej krawedzi strony */
+            bottom: 10px;
+
+            /* odleglosc elementu od lewej krawedzi strony */
+            left: 10px;
+
+            /* ramka elementu, nie chcemy jej wiec dajemy zero */
+            border: 0px;
+
+            /* czy pokazac 'uchwyt' do powiekszania elementu przez uzytkownika */
+            resize: none;
+
+            /* czy pokazac scroll po prawej jesli tekst bedzie zbyt dlugi */
+            overflow:hidden;
+        }
+        
+        .kolorowyTekst {
+            /* kolor tekstu */
+            color: brown;
+        }
+
+        img {
+            /* dodatkowy filtr dla elementu, tutaj chcemy zeby byl prawie czarnobialy (usuwamy kolory) */
+            filter: grayscale(50%);
+
+            /* margines (odstep) elementu od elementu po lewej */
+            margin-left:auto;
+
+            /* margines (odstep) elementu od elementu po prawej */
+            margin-right:auto;
+
+            /* okresla czy dany element jest traktowany jako blok czy tez tak zwany 'inline' */
+            display: block;
+        }
+
+        img.active:hover {
+            /* dodatkowy filtr elementu, teraz chcemy zeby byl kolorowy */
+            filter: grayscale(0%);
+        }
+
+        img.inactive {
+            /* dodatkowy filtr elementu, teraz chcemy zeby byl czarnobialy */
+            filter: grayscale(100%);
+        }
+    </style>
 </head>
 <body>
-    <h1>Gra Szybkie Palce!</h1>
-    <input id="przyciskStart" type="button" value="START" onclick="RozpocznijGre()">
-    <textarea id="dziennikZdarzen" cols="100" rows="20" readonly></textarea>
+    <!-- podajemy nazwe klasy CSS ktorej styl chcemy zastosowac dla elementu H1 -->
+    <h1 id="tytul" class="kolorowyTekst">Szybkie Palce!</h1>
+    <!-- dzieki zastosowaniu obrazka, filtrow i pseudoklasy hover z jednego obrazka mozemy zrobic ladny przycisk -->
+    <img id="przyciskStart" class="active" src="obrazki/start.png" onclick="RozpocznijGre()">
+    <!-- styl CSS mozemy tez ustawic na konkretnym elemencie za pomoca atrybutu 'style' -->
+    <textarea id="dziennikZdarzen" class="kolorowyTekst" style="background-color:rgba(0,0,0,0);" cols="100" rows="20" readonly></textarea>
     <script>
         // 1. Wyswietlenie okienka Graczom
         alert('Witaj w grze Szybkie Palce! Aby rozpocząć kliknij w przycisk "START"');
@@ -39,6 +117,10 @@
 
         // Funkcja sluzy do rozpoczynania nowej gry
         function RozpocznijGre() {
+            // sprawdzamy czy przycisk jest aktywny, jezeli nie to wychodzimy
+            if(!document.getElementById('przyciskStart').classList.contains('active')) {
+                return;
+            }
             WylaczPrzyciskStart();
             Dzwiek('start');
             Zanotuj('Rozpoczynamy Grę!');
@@ -187,14 +269,25 @@
         }
 
         // Funkcja odtwarzajaca plik z efektem dzwiekowym z katalogu 'dzwieki'
-        function Dzwiek(dzwiek) {
+        function Dzwiek(dzwiek, isBackground) {
             // dzwieki ze strony https://freesound.org/
-            new Audio('dzwieki/' + dzwiek + '.mp3').play();
+            var audio = new Audio('dzwieki/' + dzwiek + '.mp3');
+
+            // dla dzwieku tla chcemy odtwarzac w kolko i znacznie ciszej niz normalne dzwieki
+            // do srodka instrukcji IF wejdziemy tylko jezeli podany parametr jest 'true'
+            // w przeciwnym wypadku dzwiek bedzie odtworzony normalnie, czyli tylko raz i z normalna glosnoscia
+            if(isBackground) {
+                audio.loop=true;
+                audio.volume=0.3;
+            }
+
+            audio.play();
         }
 
         // Funkcja wylaczajaca przycisk START
         function WylaczPrzyciskStart() {
-            document.getElementById('przyciskStart').setAttribute('disabled', 'disabled');
+            document.getElementById('przyciskStart').classList.remove('active');
+            document.getElementById('przyciskStart').classList.add('inactive');
             document.getElementById('dziennikZdarzen').focus(); 
         }
 
@@ -209,7 +302,9 @@
         // Rejestracja nasluchiwania na nacisniecie klawisza
         // Mowimy przygladarce ze jestesmy zainteresowani zdarzeniem keydown
         document.addEventListener('keydown', NacisnietoPrzycisk);
-
+        
+        // Wlaczamy muzyczke w tle
+        Dzwiek('western', true);
     </script>
 
 </body>
